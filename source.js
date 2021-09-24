@@ -1,15 +1,18 @@
-function send(message, count = 1) {
-    var msgBox = document.querySelectorAll("[contenteditable='true']")[1];
-    var type = new UIEvent('input', {bubbles: true, cancelable: true, view: window});
-    interval = setInterval(()=>{
+class send{
+    #interval;
+    constructor(message, count = 1) {
+        var msgBox = document.querySelectorAll("[contenteditable='true']")[1];
+        var type = new UIEvent('input', {bubbles: true, cancelable: true, view: window});
+        this.#interval = setInterval(()=>{
             msgBox.innerHTML = message;
             msgBox.dispatchEvent(type);
             document.querySelector('span[data-icon="send"]').click();
             if(!--count){
-                clearInterval(interval);
+                clearInterval(this.#interval);
             }
         },100);
-}
-function stop(){
-    clearInterval(interval);
+    }
+    stop(){
+        clearInterval(this.#interval);
+    }
 }
