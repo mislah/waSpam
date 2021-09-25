@@ -1,18 +1,28 @@
-class send{
-    #interval;
-    constructor(message, count = 1) {
-        var msgBox = document.querySelectorAll("[contenteditable='true']")[1];
-        var type = new UIEvent('input', {bubbles: true, cancelable: true, view: window});
-        this.#interval = setInterval(()=>{
-            msgBox.innerHTML = message;
-            msgBox.dispatchEvent(type);
-            document.querySelector('span[data-icon="send"]').click();
-            if(!--count){
-                clearInterval(this.#interval);
+document.addEventListener('click', () => {
+    document.querySelectorAll("[contenteditable='true']")[1].addEventListener("keydown", event => {
+        if (event.key === "#") {
+            var msgBox = document.querySelectorAll("[contenteditable='true']")[1];
+            if(msgBox.innerText.search(/#\d+#$/)!=-1){
+                window.store = msgBox.innerHTML.repeat(1);
+                msgBox.innerHTML = msgBox.innerHTML.replace(/#\d+#/,'')
             }
-        },100);
-    }
-    stop(){
-        clearInterval(this.#interval);
-    }
-}
+        }
+        if (event.key === "Enter") {
+            window.store = window.store.replace(/#\d+#/,"");
+            const type = new UIEvent('input', {bubbles: true, cancelable: true, view: window});
+            const enter = new KeyboardEvent('keydown', {keyCode: 13, bubbles: true, view: window});
+            
+            var msgBox = document.querySelectorAll("[contenteditable='true']")[1];
+            var count = window.store.innerText.split(/#(\d+)#$/)[1];
+            message = window.store;
+            
+            msgBox.innerHTML = '';
+            count = parseInt(count);
+            while(count--) {
+                msgBox.innerHTML = message;
+                msgBox.dispatchEvent(type);
+                msgBox.dispatchEvent(enter);
+            }
+        }
+    });
+});
